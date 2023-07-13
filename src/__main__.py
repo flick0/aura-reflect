@@ -39,7 +39,7 @@ while True:
         console.print(f"██",style=f"rgb({colors[3][0]},{colors[3][1]},{colors[3][2]})")
         console.log(f"took {round((time.time()-now)*1000)}ms to get colors")
 
-    color = colormix(prev_color,colors[4],0.3)   
+    color = colormix(prev_color,colors[4],MiscSettings.color_fade_step)   
     color = list(map(lambda x: round(x*255) ,color))
     aura.set_color(*color) 
     prev_color = color

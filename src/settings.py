@@ -1,6 +1,7 @@
 class MiscSettings:
     default_color:list = [0x00,0x00,0x00]
     debug:bool = False
+    color_fade_step:float = 0.3
 
 class ImageSettings:
     color:float = 3.0
