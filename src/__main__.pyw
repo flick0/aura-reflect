@@ -7,7 +7,7 @@ import time
 import numpy as np
 import matplotlib as mpl
 
-from settings import ScreenSettings,MiscSettings
+from settings import ScreenSettings,MiscSettings,ColorSettings,AuraSettings
 
 if MiscSettings.debug:
     from rich.console import Console
@@ -37,11 +37,11 @@ def angle_color(angle, center, c1,c2,c3,c4):
         tert = colormix(c3,c4,(angle-180)/90)
     else:
         tert = colormix(c4,c1,(angle-270)/90)
-        
-    return colormix(center,tert,MiscSettings.tertiary_color_mix)
+
+    return colormix(center,tert,ColorSettings.tertiary_color_mix)
 
 
-prev_color = MiscSettings.default_color
+prev_color = ColorSettings.default_color
 
 class Exiter():
     def __init__(self):
@@ -60,7 +60,7 @@ exiter = Exiter()
 
 print("ctrl + c to exit ")
 
-angle = MiscSettings.starting_angle
+angle = ColorSettings.default_tertiary_angle
 
 while True:
     now = time.time()
@@ -74,15 +74,15 @@ while True:
         console.print(f"██",style=f"rgb({colors[3][0]},{colors[3][1]},{colors[3][2]})")
         console.log(f"took {round((time.time()-now)*1000)}ms to get colors")
 
-    color = colormix(prev_color,angle_color(angle,colors[4],colors[0],colors[1],colors[2],colors[3]),MiscSettings.color_fade_step)   
+    color = colormix(prev_color,angle_color(angle,colors[4],colors[0],colors[1],colors[2],colors[3]),ColorSettings.color_fade_step)   
     # color = list(map(lambda x: round(x*255) ,color))
     aura.set_color(*color)
     prev_color = color
 
-    angle += MiscSettings.angle_step
+    angle += ColorSettings.tertiary_angle_step
     angle %= 360
 
-    tps = MiscSettings.tps
+    tps = AuraSettings.tps
     elapsed = time.time()-now
 
     if elapsed < 1/tps:

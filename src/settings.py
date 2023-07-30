@@ -1,12 +1,17 @@
 class MiscSettings:
-    default_color:list = [0x00,0x00,0x00]
     debug:bool = False
-    color_fade_step:float = 0.3
-    tps: int = 20
-    starting_angle:int = 0
-    angle_step = 5
-    tertiary_color_mix = 0.7
 
+class AuraSettings:
+    tps: int = 20
+    
+class ColorSettings:
+    default_color:list = [0x00,0x00,0x00]
+    color_fade_step:float = 0.3
+
+    default_tertiary_angle:int = 0
+    tertiary_angle_step:int = 5
+    tertiary_color_mix:float = 0.7
+    
 class ImageSettings:
     color:float = 2.7
     contrast:float = None
@@ -24,4 +29,3 @@ class ImageSettings:
 class ScreenSettings:
     fps:int = 20
     region:tuple[int,int,int,int] = None
-
