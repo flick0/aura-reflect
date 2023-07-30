@@ -9,8 +9,6 @@ import matplotlib as mpl
 
 from settings import ScreenSettings,MiscSettings
 
-from threading import Thread
-
 if MiscSettings.debug:
     from rich.console import Console
     console = Console()
@@ -26,7 +24,22 @@ screen = Screen(fps=ScreenSettings.fps,region=ScreenSettings.region or None)
 def colormix(c1,c2,mix=0):
     c1=np.array(tuple(map(lambda x: x/255,c1)))
     c2=np.array(tuple(map(lambda x: x/255,c2)))
-    return mpl.colors.to_rgb((1-mix)*c1 + mix*c2)
+    return list(map(lambda x: round(x*255) ,mpl.colors.to_rgb((1-mix)*c1 + mix*c2))) 
+
+
+def angle_color(angle, center, c1,c2,c3,c4):
+
+    if angle < 90:
+        tert = colormix(c1,c2,angle/90)
+    elif angle < 180:
+        tert = colormix(c2,c3,(angle-90)/90)
+    elif angle < 270:
+        tert = colormix(c3,c4,(angle-180)/90)
+    else:
+        tert = colormix(c4,c1,(angle-270)/90)
+        
+    return colormix(center,tert,MiscSettings.tertiary_color_mix)
+
 
 prev_color = MiscSettings.default_color
 
@@ -45,6 +58,10 @@ class Exiter():
 
 exiter = Exiter()
 
+print("ctrl + c to exit ")
+
+angle = MiscSettings.starting_angle
+
 while True:
     now = time.time()
     colors = screen.get_colors()
@@ -57,10 +74,13 @@ while True:
         console.print(f"██",style=f"rgb({colors[3][0]},{colors[3][1]},{colors[3][2]})")
         console.log(f"took {round((time.time()-now)*1000)}ms to get colors")
 
-    color = colormix(prev_color,colors[4],MiscSettings.color_fade_step)   
-    color = list(map(lambda x: round(x*255) ,color))
+    color = colormix(prev_color,angle_color(angle,colors[4],colors[0],colors[1],colors[2],colors[3]),MiscSettings.color_fade_step)   
+    # color = list(map(lambda x: round(x*255) ,color))
     aura.set_color(*color)
     prev_color = color
+
+    angle += MiscSettings.angle_step
+    angle %= 360
 
     tps = MiscSettings.tps
     elapsed = time.time()-now
