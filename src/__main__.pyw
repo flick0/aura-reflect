@@ -62,6 +62,12 @@ while True:
     aura.set_color(*color)
     prev_color = color
 
+    tps = MiscSettings.tps
+    elapsed = time.time()-now
+
+    if elapsed < 1/tps:
+        time.sleep(1/tps-elapsed)
+
     if exiter.exit():
         aura.close()
         print("closed all aura devices")
