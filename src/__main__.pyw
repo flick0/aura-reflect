@@ -1,12 +1,15 @@
 from aura import AuraUsb
 from screen import Screen
 
+import signal 
 import time
 
 import numpy as np
 import matplotlib as mpl
 
 from settings import ScreenSettings,MiscSettings
+
+from threading import Thread
 
 if MiscSettings.debug:
     from rich.console import Console
@@ -27,6 +30,21 @@ def colormix(c1,c2,mix=0):
 
 prev_color = MiscSettings.default_color
 
+class Exiter():
+    def __init__(self):
+        self.state = False
+        signal.signal(signal.SIGINT, self.change_state)
+
+    def change_state(self, signum, frame):
+        print("exiting")
+        signal.signal(signal.SIGINT, signal.SIG_DFL)
+        self.state = True
+
+    def exit(self):
+        return self.state
+
+exiter = Exiter()
+
 while True:
     now = time.time()
     colors = screen.get_colors()
@@ -41,5 +59,10 @@ while True:
 
     color = colormix(prev_color,colors[4],MiscSettings.color_fade_step)   
     color = list(map(lambda x: round(x*255) ,color))
-    aura.set_color(*color) 
+    aura.set_color(*color)
     prev_color = color
+
+    if exiter.exit():
+        aura.close()
+        print("closed all aura devices")
+        break

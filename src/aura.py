@@ -64,6 +64,10 @@ class AuraUsb:
     def __init__(self):
         self.devices = aura_devices()
 
+    def close(self):
+        for device in self.devices:
+            device.close()
+
     def set_color(self,r,g,b):
         msg = aura_msg(r,g,b)
         for device in self.devices:
