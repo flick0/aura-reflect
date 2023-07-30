@@ -75,6 +75,14 @@ while True:
         console.log(f"took {round((time.time()-now)*1000)}ms to get colors")
 
     color = colormix(prev_color,angle_color(angle,colors[4],colors[0],colors[1],colors[2],colors[3]),ColorSettings.color_fade_step)   
+    
+    if color[0] < ColorSettings.minimum_red:
+        color[0] = ColorSettings.minimum_red
+    if color[1] < ColorSettings.minimum_green:
+        color[1] = ColorSettings.minimum_green
+    if color[2] < ColorSettings.minimum_blue:
+        color[2] = ColorSettings.minimum_blue
+    
     # color = list(map(lambda x: round(x*255) ,color))
     aura.set_color(*color)
     prev_color = color

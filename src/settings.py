@@ -8,6 +8,10 @@ class ColorSettings:
     default_color:list = [0x00,0x00,0x00]
     color_fade_step:float = 0.3
 
+    minimum_red:int = 1
+    minimum_green:int = 1
+    minimum_blue:int = 1
+
     default_tertiary_angle:int = 0
     tertiary_angle_step:int = 5
     tertiary_color_mix:float = 0.7
